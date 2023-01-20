@@ -1,9 +1,8 @@
 import React from "react";
 import "./Hero.scss";
 import { motion } from "framer-motion";
-const profilePhoto =
-  "https://avatars.githubusercontent.com/u/40049179?s=400&u=4986fbaa6e9efec4a306bb1f13b4459309fc9a5c&v=4";
-const Hero = () => {
+
+const Hero = ({ profilePhoto }) => {
   const moveVariants = {
     animation: {
       y: [0, -15],
@@ -31,7 +30,7 @@ const Hero = () => {
       </div>
       <div className="profile_text">
         <h3 className="name">
-          Hi, I'm <span>Sumanta Kabiraj</span>{" "}
+          Hi, I'm <span>Sumanta Kabiraj</span>
         </h3>
         <span className="job">Full Stack Developer Based on India</span>
         <span className="text">

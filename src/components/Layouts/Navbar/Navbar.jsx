@@ -8,19 +8,16 @@ const navLinks = ["home", "about", "skills", "portfolio", "contact"];
 const socialIcons = [
   {
     icon: <FaInstagram />,
-    link: "https://sumantakabiraj.com",
+    link: "https://instagram.com/infysumanta",
   },
-  {
-    icon: <FaFacebook />,
-    link: "https://sumantakabiraj.com",
-  },
+
   {
     icon: <FaTwitter />,
-    link: "https://sumantakabiraj.com",
+    link: "https://twitter.com/infysumanta",
   },
   {
     icon: <FaGithub />,
-    link: "https://sumantakabiraj.com",
+    link: "https://github.com/infysumanta",
   },
 ];
 
@@ -69,7 +66,7 @@ const Navbar = () => {
     >
       <div className="Nav_container">
         <div className="logo">
-          <h3>A</h3>
+          <h3>SK</h3>
         </div>
         <ul className="nav_links">
           {navLinks.map((navlink, index) => {
