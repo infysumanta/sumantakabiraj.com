@@ -30,7 +30,7 @@ const Hero = ({ profilePhoto }) => {
       </div>
       <div className="profile_text">
         <h3 className="name">
-          Hi, I'm <span>Sumanta Kabiraj</span>
+          Hi, I'm <span>Sumanta</span>
         </h3>
         <span className="job">Full Stack Developer Based on India</span>
         <span className="text">
