@@ -1,1 +1,0 @@
-# sumantakabiraj.com
