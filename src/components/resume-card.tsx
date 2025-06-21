@@ -44,7 +44,7 @@ export const ResumeCard = ({
       className="block cursor-pointer"
       onClick={handleClick}
     >
-      <Card className="flex">
+      <Card className="flex  border border-muted-background dark:border-foreground hover:bg-muted-background/50 dark:hover:bg-foreground/50 transition-all duration-300 ease-in-out p-2">
         <div className="flex-none">
           <Avatar className="border size-12 m-auto bg-muted-background dark:bg-foreground">
             <AvatarImage
@@ -76,7 +76,7 @@ export const ResumeCard = ({
                 <ChevronRightIcon
                   className={cn(
                     "size-4 translate-x-0 transform opacity-0 transition-all duration-300 ease-out group-hover:translate-x-1 group-hover:opacity-100",
-                    isExpanded ? "rotate-90" : "rotate-0"
+                    isExpanded ? "rotate-90" : "rotate-0",
                   )}
                 />
               </h3>
