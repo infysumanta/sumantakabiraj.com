@@ -132,6 +132,7 @@ export const DATA = {
       start: "2016",
       end: "2019",
       logoUrl: "",
+      href: "",
     },
     {
       school: "Ondal High School",
@@ -139,6 +140,7 @@ export const DATA = {
       start: "2014",
       end: "2016",
       logoUrl: "",
+      href: "",
     },
     {
       school: "Dakshinkhanda High School",
@@ -146,6 +148,7 @@ export const DATA = {
       start: "2012",
       end: "2014",
       logoUrl: "",
+      href: "",
     },
   ],
   projects: [
@@ -154,6 +157,19 @@ export const DATA = {
       href: "https://hirelytics.app/",
       dates: "2024",
       active: true,
+      image: "/hirelytics.png",
+      video: "/hirelytics.mp4",
+      links: [
+        {
+          icon: (
+            <>
+              <Icons.github />
+            </>
+          ),
+          type: "GitHub",
+          href: "https://github.com/infysumanta/hirelytics",
+        },
+      ],
       description:
         "End-to-end AI-driven hiring platform with recruiter/candidate workflows, real-time voice interviews, auto evaluation, and attention monitoring.",
       technologies: [
@@ -170,6 +186,19 @@ export const DATA = {
       href: "",
       dates: "2024",
       active: true,
+      image: "/talkthru.png",
+      video: "/talkthru.mp4",
+      links: [
+        {
+          icon: (
+            <>
+              <Icons.github />
+            </>
+          ),
+          type: "GitHub",
+          href: "",
+        },
+      ],
       description:
         "AI mental health chatbot with RAG, GPT-4o, Gemini, emotion detection, semantic memory, CBT support, journaling, and crisis workflows.",
       technologies: ["OpenAI", "Gemini", "VectorDB", "Next.js", "Tailwind"],
@@ -179,6 +208,19 @@ export const DATA = {
       href: "",
       dates: "2023",
       active: true,
+      image: "/healthvio.png",
+      video: "/healthvio.mp4",
+      links: [
+        {
+          icon: (
+            <>
+              <Icons.github />
+            </>
+          ),
+          type: "GitHub",
+          href: "",
+        },
+      ],
       description:
         "Comprehensive telehealth platform with appointment scheduling, EHR workflows, video calls, dynamic questionnaires, and calendar sync.",
       technologies: [
@@ -193,6 +235,19 @@ export const DATA = {
       title: "Python CLI AI Coder",
       href: "https://github.com/infysumanta/python-cli-ai-coder",
       dates: "2024",
+      image: "/python-cli-ai-coder.png",
+      video: "/python-cli-ai-coder.mp4",
+      links: [
+        {
+          icon: (
+            <>
+              <Icons.github />
+            </>
+          ),
+          type: "GitHub",
+          href: "",
+        },
+      ],
       active: true,
       description:
         "CLI tool for AI-assisted code generation, folder structure scaffolding, and iterative full-stack development with GenAI.",
