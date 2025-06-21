@@ -82,8 +82,8 @@ export const DATA = {
       title: "Full Stack Developer | Team Lead",
       start: "Feb 2023",
       end: "Present",
-      logoUrl: "https://bexcode.com/favicon.ico",
-      href: "https://bexcode.com",
+      logoUrl: "https://bexcodeservices.com/favicon.ico",
+      href: "https://bexcodeservices.com",
       badges: ["Remote", "Full Time"],
       description:
         "Architected telehealth platforms with real-time features, AI consult generation, EHR integrations (DoseSpot, eFax, eRx), dynamic scheduling, multi-payment gateways, cron-based automation, and AWS Lambda deployments.",
