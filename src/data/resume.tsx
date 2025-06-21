@@ -31,7 +31,7 @@ export const DATA = {
   ],
   navbar: [
     { href: "/", icon: HomeIcon, label: "Home" },
-    { href: "/blog", icon: NotebookIcon, label: "Blog" },
+    // { href: "/blog", icon: NotebookIcon, label: "Blog" },
   ],
   contact: {
     email: "sumantablog@gmail.com",
@@ -70,6 +70,9 @@ export const DATA = {
       title: "Sr. Front End Developer",
       start: "June 2024",
       end: "Present",
+      logoUrl: "https://reliccare.com/favicon.ico",
+      href: "https://reliccare.com",
+      badges: ["Remote", "Full Time"],
       description:
         "Led the development of AI-powered conversational tools for healthcare, integrating Medplum and PointClickCare EHRs, building voice/chat systems, Azure B2C authentication, Teams tab apps, and Microsoft Dynamics CRM features.",
     },
@@ -79,6 +82,9 @@ export const DATA = {
       title: "Full Stack Developer | Team Lead",
       start: "Feb 2023",
       end: "Present",
+      logoUrl: "https://bexcode.com/favicon.ico",
+      href: "https://bexcode.com",
+      badges: ["Remote", "Full Time"],
       description:
         "Architected telehealth platforms with real-time features, AI consult generation, EHR integrations (DoseSpot, eFax, eRx), dynamic scheduling, multi-payment gateways, cron-based automation, and AWS Lambda deployments.",
     },
@@ -88,6 +94,9 @@ export const DATA = {
       title: "Assistant Systems Engineer",
       start: "Feb 2021",
       end: "Nov 2022",
+      logoUrl: "https://www.tcs.com/favicon.ico",
+      href: "https://www.tcs.com",
+      badges: ["Full Time"],
       description:
         "Developed Node.js backend systems with WebSocket support, managed Linux infrastructure, Azure AD integrations, cron jobs, and VM provisioning for scalable enterprise solutions.",
     },
@@ -97,6 +106,9 @@ export const DATA = {
       title: "Assistant Systems Engineer Trainee",
       start: "Feb 2020",
       end: "Feb 2021",
+      logoUrl: "https://www.tcs.com/favicon.ico",
+      href: "https://www.tcs.com",
+      badges: ["Full Time"],
       description:
         "Initial training and backend development support in Node.js, Azure, and Linux-based infrastructure automation.",
     },
@@ -106,6 +118,9 @@ export const DATA = {
       title: "Full Stack Developer",
       start: "Jun 2019",
       end: "Feb 2020",
+      logoUrl: "https://rtcs.in/favicon.ico",
+      href: "https://rtcs.in",
+      badges: ["Full Time"],
       description:
         "Built college management, dynamic job portals, and QR-authenticated challan systems using Laravel, Node.js, React, and Redis.",
     },
