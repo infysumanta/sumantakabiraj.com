@@ -64,18 +64,18 @@ export const DATA = {
     },
   },
   work: [
-    {
-      company: "Relic Care Inc",
-      location: "Remote",
-      title: "Sr. Front End Developer",
-      start: "June 2024",
-      end: "Present",
-      logoUrl: "https://reliccare.com/favicon.ico",
-      href: "https://reliccare.com",
-      badges: ["Remote", "Full Time"],
-      description:
-        "Led the development of AI-powered conversational tools for healthcare, integrating Medplum and PointClickCare EHRs, building voice/chat systems, Azure B2C authentication, Teams tab apps, and Microsoft Dynamics CRM features.",
-    },
+    // {
+    //   company: "Relic Care Inc",
+    //   location: "Remote",
+    //   title: "Sr. Front End Developer",
+    //   start: "June 2024",
+    //   end: "Present",
+    //   logoUrl: "https://reliccare.com/favicon.ico",
+    //   href: "https://reliccare.com",
+    //   badges: ["Remote", "Full Time"],
+    //   description:
+    //     "Led the development of AI-powered conversational tools for healthcare, integrating Medplum and PointClickCare EHRs, building voice/chat systems, Azure B2C authentication, Teams tab apps, and Microsoft Dynamics CRM features.",
+    // },
     {
       company: "BexCode Services - IT Technology",
       location: "Remote",
