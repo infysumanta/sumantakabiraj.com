@@ -4,6 +4,7 @@ import { ProjectCard } from "@/components/project-card";
 import { ResumeCard } from "@/components/resume-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { DATA } from "@/data/resume";
 import Link from "next/link";
 import Markdown from "react-markdown";
@@ -37,6 +38,24 @@ export default function Page() {
             </BlurFade>
           </div>
         </div>
+        {/* <BlurFade delay={BLUR_FADE_DELAY * 4}>
+          <div className="prose max-w-full text-pretty font-sans text-sm text-muted-foreground dark:prose-invert mt-4">
+            <Link
+              href={DATA.resume}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline "
+            >
+              <Button
+                variant="ghost"
+                className="cursor-pointer bg-gray-400 text-white hover:bg-gray-700 hover:text-white"
+                size="sm"
+              >
+                Resume
+              </Button>
+            </Link>
+          </div>
+        </BlurFade> */}
       </section>
       <section id="about">
         <BlurFade delay={BLUR_FADE_DELAY * 3}>
@@ -48,6 +67,7 @@ export default function Page() {
           </div>
         </BlurFade>
       </section>
+
       <section id="work">
         <div className="flex min-h-0 flex-col gap-y-3">
           <BlurFade delay={BLUR_FADE_DELAY * 5}>

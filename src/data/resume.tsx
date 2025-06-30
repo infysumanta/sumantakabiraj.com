@@ -5,6 +5,7 @@ export const DATA = {
   name: "Sumanta Kabiraj",
   initials: "SK",
   url: "https://sumantakabiraj.com",
+  resume: "/sumanta-kabiraj.pdf",
   location: "Kolkata, India",
   locationLink: "https://www.google.com/maps/place/Kolkata",
   description:
@@ -47,6 +48,12 @@ export const DATA = {
         name: "LinkedIn",
         url: "https://www.linkedin.com/in/sumanta-kabiraj/",
         icon: Icons.linkedin,
+        navbar: true,
+      },
+      Resume: {
+        name: "Resume",
+        url: "/sumanta-kabiraj.pdf",
+        icon: Icons.resume,
         navbar: true,
       },
       X: {
