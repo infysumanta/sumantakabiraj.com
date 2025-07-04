@@ -164,8 +164,8 @@ export const DATA = {
       href: "https://hirelytics.app/",
       dates: "2024",
       active: true,
-      image: "/hirelytics.png",
-      video: "/hirelytics.mp4",
+      image: "/hirelytics.jpeg",
+      video: "",
       links: [
         {
           icon: (
@@ -194,7 +194,7 @@ export const DATA = {
       dates: "2024",
       active: true,
       image: "/talkthru.png",
-      video: "/talkthru.mp4",
+      video: "",
       links: [
         {
           icon: (
@@ -215,8 +215,8 @@ export const DATA = {
       href: "",
       dates: "2023",
       active: true,
-      image: "/healthvio.png",
-      video: "/healthvio.mp4",
+      image: "/healthvio.jpg",
+      video: "",
       links: [
         {
           icon: (
@@ -240,10 +240,10 @@ export const DATA = {
     },
     {
       title: "Python CLI AI Coder",
-      href: "https://github.com/infysumanta/python-cli-ai-coder",
+      href: "https://x.com/infysumanta/status/1911327271782150213",
       dates: "2024",
-      image: "/python-cli-ai-coder.png",
-      video: "/python-cli-ai-coder.mp4",
+      image: "/ai-coder.png",
+      video: "",
       links: [
         {
           icon: (
@@ -252,7 +252,7 @@ export const DATA = {
             </>
           ),
           type: "GitHub",
-          href: "",
+          href: "https://github.com/infysumanta/python-cli-ai-coder",
         },
       ],
       active: true,
