@@ -11,6 +11,8 @@ type Project = {
   long: string;
   features: string[];
   tech: string[];
+  github?: string;
+  demo?: string;
 };
 
 const PROJECT_DATA: Project[] = [
@@ -21,6 +23,7 @@ const PROJECT_DATA: Project[] = [
     long: 'A complete AI hiring platform covering both recruiter and candidate workflows — from job creation through automated, AI-graded voice interviews.',
     features: ['Recruiter & candidate workflows', 'Real-time voice interviews (WebRTC)', 'Automated evaluation & scoring', 'Attention monitoring during sessions'],
     tech: ['React', 'Node.js', 'WebRTC', 'OpenAI', 'PostgreSQL', 'Tailwind'],
+    github: 'https://github.com/infysumanta/hirelytics', demo: 'https://hirelytics.app/',
   },
   {
     id: 2, name: 'Talkthru', year: '2024', slug: 'talkthru', img: '/talkthru.png',
@@ -45,6 +48,7 @@ const PROJECT_DATA: Project[] = [
     long: 'A command-line coding agent that generates code, scaffolds folder structures and iterates on full-stack projects with GenAI — built in a 2-day sprint on ~1M tokens.',
     features: ['AI-assisted code generation', 'Folder-structure scaffolding', 'Iterative full-stack development', 'GenAI-driven refactor loops'],
     tech: ['Python', 'CLI', 'OpenAI'],
+    github: 'https://github.com/infysumanta/python-cli-ai-coder', demo: 'https://x.com/infysumanta/status/1911327271782150213',
   },
 ];
 
@@ -382,10 +386,12 @@ export default function Portfolio() {
                                 </div>
                               ))}
                             </div>
-                            <div style={{ marginTop: 13, display: 'flex', gap: 8 }}>
-                              <span className="lnk" style={{ cursor: 'pointer', fontSize: 11, fontWeight: 500, padding: '7px 12px', background: 'var(--green,#4ade80)', color: '#0b0e0b', borderRadius: 6 }}>[ github ]</span>
-                              <span className="lnk" style={{ cursor: 'pointer', fontSize: 11, fontWeight: 500, padding: '7px 12px', border: '1px solid var(--bd,#232823)', color: 'var(--fg,#d6ddd4)', borderRadius: 6 }}>[ live ]</span>
-                            </div>
+                            {(p.github || p.demo) && (
+                              <div style={{ marginTop: 13, display: 'flex', gap: 8 }} onClick={(e) => e.stopPropagation()}>
+                                {p.github && <a className="lnk" href={p.github} target="_blank" rel="noreferrer" style={{ cursor: 'pointer', fontSize: 11, fontWeight: 500, padding: '7px 12px', background: 'var(--green,#4ade80)', color: '#0b0e0b', borderRadius: 6, textDecoration: 'none' }}>[ github ]</a>}
+                                {p.demo && <a className="lnk" href={p.demo} target="_blank" rel="noreferrer" style={{ cursor: 'pointer', fontSize: 11, fontWeight: 500, padding: '7px 12px', border: '1px solid var(--bd,#232823)', color: 'var(--fg,#d6ddd4)', borderRadius: 6, textDecoration: 'none' }}>[ live ]</a>}
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
@@ -609,10 +615,12 @@ export default function Portfolio() {
                               <span key={t} style={{ fontSize: 11, padding: '4px 9px', background: 'var(--chip,#18201a)', border: '1px solid var(--chipbd,#2a352a)', borderRadius: 5, color: 'var(--chipfg,#a7f3a0)' }}>{t}</span>
                             ))}
                           </div>
-                          <div style={{ marginTop: 18, display: 'flex', gap: 10 }}>
-                            <span className="lnk" style={{ cursor: 'pointer', fontSize: 12, fontWeight: 500, padding: '9px 15px', background: 'var(--green,#4ade80)', color: '#0b0e0b', borderRadius: 6 }}>[ github ]</span>
-                            <span className="lnk" style={{ cursor: 'pointer', fontSize: 12, fontWeight: 500, padding: '9px 15px', border: '1px solid var(--bd,#232823)', color: 'var(--fg,#d6ddd4)', borderRadius: 6 }}>[ live demo ]</span>
-                          </div>
+                          {(sel.github || sel.demo) && (
+                            <div style={{ marginTop: 18, display: 'flex', gap: 10 }}>
+                              {sel.github && <a className="lnk" href={sel.github} target="_blank" rel="noreferrer" style={{ cursor: 'pointer', fontSize: 12, fontWeight: 500, padding: '9px 15px', background: 'var(--green,#4ade80)', color: '#0b0e0b', borderRadius: 6, textDecoration: 'none' }}>[ github ]</a>}
+                              {sel.demo && <a className="lnk" href={sel.demo} target="_blank" rel="noreferrer" style={{ cursor: 'pointer', fontSize: 12, fontWeight: 500, padding: '9px 15px', border: '1px solid var(--bd,#232823)', color: 'var(--fg,#d6ddd4)', borderRadius: 6, textDecoration: 'none' }}>[ live demo ]</a>}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </>
