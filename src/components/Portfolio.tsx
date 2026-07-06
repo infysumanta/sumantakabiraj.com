@@ -5,6 +5,7 @@ type Project = {
   name: string;
   year: string;
   slug: string;
+  img: string;
   blurb: string;
   techline: string;
   long: string;
@@ -14,7 +15,7 @@ type Project = {
 
 const PROJECT_DATA: Project[] = [
   {
-    id: 1, name: 'Hirelytics', year: '2024', slug: 'hirelytics',
+    id: 1, name: 'Hirelytics', year: '2024', slug: 'hirelytics', img: '/hirelytics.jpeg',
     blurb: 'AI hiring — voice interviews, auto eval & attention monitoring.',
     techline: 'react · webrtc · openai',
     long: 'A complete AI hiring platform covering both recruiter and candidate workflows — from job creation through automated, AI-graded voice interviews.',
@@ -22,7 +23,7 @@ const PROJECT_DATA: Project[] = [
     tech: ['React', 'Node.js', 'WebRTC', 'OpenAI', 'PostgreSQL', 'Tailwind'],
   },
   {
-    id: 2, name: 'Talkthru', year: '2024', slug: 'talkthru',
+    id: 2, name: 'Talkthru', year: '2024', slug: 'talkthru', img: '/talkthru.png',
     blurb: 'Mental-health chatbot — RAG, GPT-4o, emotion detection, CBT.',
     techline: 'openai · gemini · vectordb',
     long: 'A mobile mental-health companion connecting users with an AI therapist through natural chat — with memory, emotion awareness and clinical safety flows.',
@@ -30,7 +31,7 @@ const PROJECT_DATA: Project[] = [
     tech: ['OpenAI', 'Gemini', 'VectorDB', 'Next.js', 'Tailwind'],
   },
   {
-    id: 3, name: 'Healthvio', year: '2023', slug: 'healthvio',
+    id: 3, name: 'Healthvio', year: '2023', slug: 'healthvio', img: '/healthvio.jpg',
     blurb: 'Telehealth — scheduling, EHR, video calls & calendar sync.',
     techline: 'next · agora · calendar',
     long: 'A full telehealth product handling the clinical journey end to end — booking, dynamic intake, secure video consults and two-way calendar sync.',
@@ -38,7 +39,7 @@ const PROJECT_DATA: Project[] = [
     tech: ['Next.js', 'Node.js', 'Agora', 'Google Calendar', 'Outlook'],
   },
   {
-    id: 4, name: 'Python CLI Coder', year: '2024', slug: 'py-coder',
+    id: 4, name: 'Python CLI Coder', year: '2024', slug: 'py-coder', img: '/ai-coder.png',
     blurb: 'CLI for AI codegen, scaffolding & iterative full-stack dev.',
     techline: 'python · cli · openai',
     long: 'A command-line coding agent that generates code, scaffolds folder structures and iterates on full-stack projects with GenAI — built in a 2-day sprint on ~1M tokens.',
@@ -361,8 +362,8 @@ export default function Portfolio() {
                 <div className="tgrid" style={{ marginTop: 18, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, alignItems: 'start' }}>
                   {projects.map((p) => (
                     <div key={p.id} className="pcard" onClick={p.toggleN} style={{ cursor: 'pointer', border: `1px solid ${p.borderN}`, borderRadius: 10, overflow: 'hidden', background: 'var(--bg,#0e100e)' }}>
-                      <div style={{ height: 118, background: stripe, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <span style={{ fontSize: 11, color: 'var(--dim,#6f766c)' }}>{p.slug}</span>
+                      <div style={{ height: 118, background: stripe }}>
+                        <img src={p.img} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                       </div>
                       <div style={{ padding: '16px 16px 18px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
@@ -423,7 +424,7 @@ export default function Portfolio() {
             <div className="side" style={{ padding: '22px 20px', borderRight: '1px solid var(--bd,#232823)', display: 'flex', flexDirection: 'column', gap: 20, minHeight: 0 }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
-                  <div style={{ width: 44, height: 44, flex: 'none', borderRadius: 10, background: stripe, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, color: 'var(--dim,#6f766c)' }}>SK</div>
+                  <img src="/me.jpeg" alt="Sumanta Kabiraj" style={{ width: 44, height: 44, flex: 'none', borderRadius: 10, objectFit: 'cover' }} />
                   <div>
                     <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--fg2,#e8efe6)' }}>Sumanta Kabiraj</div>
                     <div style={{ fontSize: 12, color: 'var(--dim,#6f766c)' }}>Full-Stack Developer</div>
@@ -565,8 +566,8 @@ export default function Portfolio() {
                       <div style={{ marginTop: 18, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                         {projects.map((p) => (
                           <div key={p.id} className="pcard" onClick={p.open} style={{ cursor: 'pointer', border: '1px solid var(--bd,#232823)', borderRadius: 10, overflow: 'hidden', background: 'var(--bg,#0e100e)' }}>
-                            <div style={{ height: 104, background: stripe, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                              <span style={{ fontSize: 11, color: 'var(--dim,#6f766c)' }}>{p.slug}</span>
+                            <div style={{ height: 104, background: stripe }}>
+                              <img src={p.img} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                             </div>
                             <div style={{ padding: '15px 15px 16px' }}>
                               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
@@ -587,8 +588,8 @@ export default function Portfolio() {
                       <div className="lnk" onClick={() => { setProj(null); setError(''); }} style={{ cursor: 'pointer', fontSize: 12, color: 'var(--dim2,#9aa397)' }}>← cd ..</div>
                       <div style={{ marginTop: 12, fontSize: 13, color: 'var(--green,#4ade80)' }}>$ cat {sel.slug}/README.md</div>
                       <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: '300px 1fr', gap: 26, alignItems: 'start' }}>
-                        <div style={{ height: 190, borderRadius: 10, background: stripe, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <span style={{ fontSize: 11, color: 'var(--dim,#6f766c)' }}>{sel.slug}.png</span>
+                        <div style={{ height: 190, borderRadius: 10, overflow: 'hidden', background: stripe }}>
+                          <img src={sel.img} alt={sel.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                         </div>
                         <div>
                           <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
