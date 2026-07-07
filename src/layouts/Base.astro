@@ -9,6 +9,7 @@ const { title } = Astro.props;
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/jpeg" href="/me.jpeg" />
   <title>{title}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -26,18 +27,32 @@ const { title } = Astro.props;
     .lnk{transition:opacity .18s}.lnk:hover{opacity:.6}
     .chip{transition:transform .16s,border-color .16s}.chip:hover{transform:translateY(-2px);border-color:var(--green)}
     .pcard{transition:border-color .18s,transform .18s}.pcard:hover{border-color:var(--green)!important;transform:translateY(-3px)}
+    .prow{transition:border-color .16s,transform .16s}.prow:hover{border-color:var(--green)!important;transform:translateX(2px)}
+    .tcol{min-width:0}
+    .navlink{transition:color .16s,background .16s,border-color .16s}.navlink:hover{color:var(--fg2)!important}
     .scroll::-webkit-scrollbar{width:8px}.scroll::-webkit-scrollbar-thumb{background:var(--bd);border-radius:4px}.scroll{scrollbar-width:thin;scrollbar-color:var(--bd) transparent}
     .pin{background:transparent;border:none;outline:none;color:var(--fg);font:inherit;flex:1;caret-color:var(--green)}.pin::placeholder{color:var(--dim)}
     .tg{transition:background .16s,color .16s}
     @media(max-width:860px){
-     .cwrap{height:auto!important;min-height:100vh;padding:14px 12px 40px!important}
+     .cwrap{height:auto!important;min-height:100vh;padding:14px 12px 76px!important}
+     .cmdbar{position:fixed!important;left:0;right:0;bottom:0;z-index:55;border-top:1px solid var(--bd)!important}
+     .hinttoast{top:auto!important;right:12px!important;left:12px!important;bottom:72px!important;max-width:none!important}
      .win{height:auto!important;max-height:none!important}
      .cbody,.tbody{grid-template-columns:1fr!important}
+     .tbody{overflow:visible!important}
+     .tcol{overflow:visible!important;border-right:none!important}
      .side,.tleft{border-right:none!important;border-bottom:1px solid var(--bd)!important}
+     .tright{border-top:1px solid var(--bd)!important}
      .menu{flex-direction:row!important;overflow-x:auto;gap:8px!important}.menu .mi{white-space:nowrap;flex:none}
      .main{max-height:none!important}
-     .tgrid{grid-template-columns:1fr!important}
+     .tgrid,.pgrid,.pdetail{grid-template-columns:1fr!important}
+     .tstats{grid-template-columns:repeat(2,1fr)!important}
      .hidem{display:none!important}
+     .pmwin{left:0!important;right:0!important;top:0!important;bottom:0!important;width:100%!important;max-height:none!important;border-radius:0!important;transform:none!important}
+     .pmbar{cursor:default!important}
+    }
+    @media(max-width:560px){
+     .winlabel{display:none}
     }
   </style>
 </head>
