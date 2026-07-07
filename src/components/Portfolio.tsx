@@ -108,7 +108,7 @@ const NAV = [
 ];
 
 const CMD_ALIAS: Record<string, string> = {
-  home: 'home', '~': 'home', root: 'home',
+  home: 'home', '~': 'home', root: 'home', cd: 'home', ls: 'home', '..': 'home', back: 'home',
   about: 'about', whoami: 'about', me: 'about', profile: 'about', bio: 'about',
   experience: 'experience', exp: 'experience', work: 'experience', jobs: 'experience',
   education: 'education', edu: 'education', school: 'education',
