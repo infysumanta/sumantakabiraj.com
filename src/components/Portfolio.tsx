@@ -206,7 +206,11 @@ export default function Portfolio() {
   const inputRef = useRef<HTMLInputElement>(null);
   const kbd = isMac ? '⌘K' : 'Ctrl+K';
 
-  const go = (key: string) => { setPage(key); setInput(''); setError(''); setHelpOpen(false); inputRef.current?.focus(); };
+  // Clarity custom events — no-op until the clarity() queue exists
+  const track = (name: string) => { try { (window as unknown as { clarity?: (...a: unknown[]) => void }).clarity?.('event', name); } catch { /* ignore */ } };
+
+  const go = (key: string) => { track('section:' + key); setPage(key); setInput(''); setError(''); setHelpOpen(false); inputRef.current?.focus(); };
+  const openProject = (id: number) => { track('project_open'); setOpenProj(id); };
 
   useEffect(() => {
     const saved = localStorage.getItem('theme');
@@ -226,6 +230,18 @@ export default function Portfolio() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  // outbound clicks (github / demo / socials / email) → one delegated Clarity event
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      const a = (e.target as HTMLElement | null)?.closest?.('a[href]') as HTMLAnchorElement | null;
+      if (!a) return;
+      const href = a.getAttribute('href') || '';
+      if (a.target === '_blank' || href.startsWith('mailto:')) track('outbound:' + (href.startsWith('mailto:') ? 'email' : new URL(href, location.href).hostname));
+    };
+    document.addEventListener('click', onClick);
+    return () => document.removeEventListener('click', onClick);
   }, []);
 
   // type anywhere → focus the terminal and capture the keystroke
@@ -280,6 +296,7 @@ export default function Portfolio() {
     const key = resolveCmd(v);
     if (key) { go(key); return; }
     beep();
+    track('command_notfound');
     setError('command not found: ' + v);
     setInput('');
   }
@@ -371,7 +388,7 @@ export default function Portfolio() {
     return (
       <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 10 }}>
         {projects.map((p) => (
-          <div key={p.id} className="prow" onClick={() => setOpenProj(p.id)} style={{ cursor: 'pointer', display: 'flex', gap: 13, alignItems: 'center', padding: '11px 13px', border: `1px solid ${bd}`, borderRadius: 10, background: panel2 }}>
+          <div key={p.id} className="prow" onClick={() => openProject(p.id)} style={{ cursor: 'pointer', display: 'flex', gap: 13, alignItems: 'center', padding: '11px 13px', border: `1px solid ${bd}`, borderRadius: 10, background: panel2 }}>
             <img src={p.img} alt={p.name} style={{ flex: 'none', width: 58, height: 58, borderRadius: 8, objectFit: 'cover', border: `1px solid ${bd}` }} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, alignItems: 'baseline' }}>
@@ -541,7 +558,7 @@ export default function Portfolio() {
               <SecHead cmd="$ ls -la projects/" onGo={() => go('projects')} />
               <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {projects.map((p) => (
-                  <div key={p.id} className="prow" onClick={() => setOpenProj(p.id)} style={{ cursor: 'pointer', display: 'flex', gap: 11, alignItems: 'center', padding: '9px 11px', border: `1px solid ${bd}`, borderRadius: 8, background: panel2 }}>
+                  <div key={p.id} className="prow" onClick={() => openProject(p.id)} style={{ cursor: 'pointer', display: 'flex', gap: 11, alignItems: 'center', padding: '9px 11px', border: `1px solid ${bd}`, borderRadius: 8, background: panel2 }}>
                     <img src={p.img} alt={p.name} style={{ flex: 'none', width: 44, height: 44, borderRadius: 7, objectFit: 'cover', border: `1px solid ${bd}` }} />
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'baseline' }}>
