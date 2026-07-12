@@ -194,8 +194,8 @@ function SecHead({ cmd, onGo }: { cmd: string; onGo: () => void }) {
   );
 }
 
-export default function Portfolio() {
-  const [page, setPage] = useState('home');
+export default function Portfolio({ initialPage = 'home' }: { initialPage?: string }) {
+  const [page, setPage] = useState(initialPage);
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [input, setInput] = useState('');
   const [error, setError] = useState('');
@@ -209,7 +209,14 @@ export default function Portfolio() {
   // Clarity custom events — no-op until the clarity() queue exists
   const track = (name: string) => { try { (window as unknown as { clarity?: (...a: unknown[]) => void }).clarity?.('event', name); } catch { /* ignore */ } };
 
-  const go = (key: string) => { track('section:' + key); setPage(key); setInput(''); setError(''); setHelpOpen(false); inputRef.current?.focus(); };
+  const go = (key: string) => {
+    track('section:' + key);
+    setPage(key);
+    setInput(''); setError(''); setHelpOpen(false);
+    const path = key === 'home' ? '/' : '/' + key;
+    if (typeof history !== 'undefined' && location.pathname !== path) history.pushState({ page: key }, '', path);
+    inputRef.current?.focus();
+  };
   const openProject = (id: number) => { track('project_open'); setOpenProj(id); };
 
   useEffect(() => {
@@ -230,6 +237,13 @@ export default function Portfolio() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  // browser back / forward → sync the section from the URL
+  useEffect(() => {
+    const onPop = () => setPage(location.pathname.replace(/^\/|\/$/g, '') || 'home');
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
   }, []);
 
   // outbound clicks (github / demo / socials / email) → one delegated Clarity event
@@ -519,8 +533,9 @@ export default function Portfolio() {
         <div className="navbar scroll" style={{ flex: 'none', display: 'flex', alignItems: 'center', gap: 4, padding: '8px 12px', borderBottom: `1px solid ${bd}`, background: 'var(--bg,#0e100e)', overflowX: 'auto' }}>
           {NAV.map((n) => {
             const active = n.key === page;
+            const href = n.key === 'home' ? '/' : '/' + n.key;
             return (
-              <span key={n.key} onClick={() => go(n.key)} className="navlink" style={{ cursor: 'pointer', fontSize: 11.5, padding: '5px 10px', borderRadius: 6, whiteSpace: 'nowrap', flex: 'none', background: active ? 'var(--sel,#1c2a1c)' : 'transparent', color: active ? green : dim2, border: `1px solid ${active ? 'var(--chipbd,#2a352a)' : 'transparent'}` }}>{n.label}</span>
+              <a key={n.key} href={href} onClick={(e) => { e.preventDefault(); go(n.key); }} aria-current={active ? 'page' : undefined} className="navlink" style={{ cursor: 'pointer', textDecoration: 'none', fontSize: 11.5, padding: '5px 10px', borderRadius: 6, whiteSpace: 'nowrap', flex: 'none', background: active ? 'var(--sel,#1c2a1c)' : 'transparent', color: active ? green : dim2, border: `1px solid ${active ? 'var(--chipbd,#2a352a)' : 'transparent'}` }}>{n.label}</a>
             );
           })}
           <span onClick={() => setHelpOpen(true)} className="navlink lnk" style={{ cursor: 'pointer', marginLeft: 'auto', flex: 'none', display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, padding: '4px 8px', color: dim2, whiteSpace: 'nowrap' }}>

@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import Portfolio from '../components/Portfolio';
+
+export function getStaticPaths() {
+  return [
+    { params: { section: 'about' }, props: { title: 'About' } },
+    { params: { section: 'experience' }, props: { title: 'Experience' } },
+    { params: { section: 'education' }, props: { title: 'Education' } },
+    { params: { section: 'skills' }, props: { title: 'Skills' } },
+    { params: { section: 'projects' }, props: { title: 'Projects' } },
+    { params: { section: 'github' }, props: { title: 'GitHub' } },
+    { params: { section: 'contact' }, props: { title: 'Contact' } },
+  ];
+}
+
+const { section } = Astro.params;
+const { title } = Astro.props;
+---
+<Base title={`${title} — Sumanta Kabiraj`}>
+  <Portfolio client:load initialPage={section} />
+</Base>
