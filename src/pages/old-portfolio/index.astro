@@ -1,0 +1,25 @@
+---
+import BaseNew from '../../layouts/BaseNew.astro';
+
+const OLD_DESIGNS = [
+  {
+    name: 'Terminal',
+    year: '2024',
+    blurb: 'The original terminal-themed single-page portfolio.',
+    href: '/old-portfolio/terminal',
+  },
+];
+---
+<BaseNew title="Old Portfolio — Sumanta Kabiraj">
+  <div style="max-width:680px;margin:0 auto;padding:56px 28px 64px">
+    <a href="/" class="back" style="font-size:14px;color:var(--dim)">&larr; Home</a>
+    <h1 style="margin:20px 0 8px;font-size:34px;font-weight:800;letter-spacing:-.02em;color:var(--fg)">Old Portfolio</h1>
+    <p style="margin:0 0 36px;font-size:15.5px;color:var(--fg2)">Previous designs of this site, kept live for the record.</p>
+    {OLD_DESIGNS.map((d) => (
+      <a href={d.href} class="pcard" style="display:block;padding:20px;border:1px solid var(--bd);border-radius:14px;background:var(--card);margin-bottom:14px">
+        <div style="font-size:17px;font-weight:600;color:var(--fg)">{d.name} <span style="font-weight:400;color:var(--dim);font-size:14px">&middot; {d.year}</span></div>
+        <div style="font-size:14.5px;color:var(--fg2);margin-top:6px">{d.blurb}</div>
+      </a>
+    ))}
+  </div>
+</BaseNew>
