@@ -3,26 +3,11 @@ import BaseNew from '../layouts/BaseNew.astro';
 ---
 <BaseNew title="404 — Sumanta Kabiraj">
   <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px">
-    <div style="width:100%;max-width:560px;background:var(--card);border:1px solid var(--bd);border-radius:14px;overflow:hidden">
-      <div style="display:flex;align-items:center;gap:9px;padding:13px 18px;background:var(--chip);border-bottom:1px solid var(--bd)">
-        <span style="width:12px;height:12px;border-radius:50%;background:#ff5f56"></span>
-        <span style="width:12px;height:12px;border-radius:50%;background:#ffbd2e"></span>
-        <span style="width:12px;height:12px;border-radius:50%;background:#27c93f"></span>
-        <span style="margin-left:12px;font-size:12px;color:var(--dim)">sumanta@portfolio: ~ — zsh</span>
-      </div>
-      <div style="padding:22px 24px 26px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:13.5px;line-height:1.7">
-        <div style="color:#3ecf6e">$ cd <span id="p">.</span></div>
-        <div style="color:#ff7a6e;margin-top:8px">zsh: no such file or directory: <span id="p2">.</span></div>
-        <div style="color:var(--fg2);margin-top:16px">The page you're looking for doesn't exist.</div>
-        <div style="margin-top:20px">
-          <a class="cta" href="/" style="display:inline-block;font-size:13px;font-weight:600;padding:10px 16px;border:1px solid var(--bd);border-radius:8px;color:var(--fg);text-decoration:none">$ cd ~ &nbsp;&rarr; back home</a>
-        </div>
-      </div>
+    <div style="max-width:480px;text-align:center">
+      <div style="font-size:15px;font-weight:600;letter-spacing:.06em;color:var(--dim);margin-bottom:16px">404</div>
+      <h1 style="margin:0 0 12px;font-size:32px;font-weight:800;letter-spacing:-.02em;color:var(--fg)">Page not found</h1>
+      <p style="margin:0 0 32px;font-size:15.5px;line-height:1.6;color:var(--fg2)">The page you're looking for doesn't exist or may have moved.</p>
+      <a class="cta" href="/" style="display:inline-block;font-size:14px;font-weight:600;padding:11px 20px;border:1px solid var(--bd);border-radius:8px;color:var(--fg);text-decoration:none">&larr; Back home</a>
     </div>
   </div>
-  <script is:inline>
-    var p = location.pathname;
-    document.getElementById('p').textContent = p;
-    document.getElementById('p2').textContent = p;
-  </script>
 </BaseNew>
