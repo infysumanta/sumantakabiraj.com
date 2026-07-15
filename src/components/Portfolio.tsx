@@ -194,6 +194,8 @@ function SecHead({ cmd, onGo }: { cmd: string; onGo: () => void }) {
   );
 }
 
+const BASE_PATH = '/old-portfolio/terminal';
+
 export default function Portfolio({ initialPage = 'home' }: { initialPage?: string }) {
   const [page, setPage] = useState(initialPage);
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
@@ -213,7 +215,7 @@ export default function Portfolio({ initialPage = 'home' }: { initialPage?: stri
     track('section:' + key);
     setPage(key);
     setInput(''); setError(''); setHelpOpen(false);
-    const path = key === 'home' ? '/' : '/' + key;
+    const path = key === 'home' ? BASE_PATH : BASE_PATH + '/' + key;
     if (typeof history !== 'undefined' && location.pathname !== path) history.pushState({ page: key }, '', path);
     inputRef.current?.focus();
   };
@@ -241,7 +243,10 @@ export default function Portfolio({ initialPage = 'home' }: { initialPage?: stri
 
   // browser back / forward → sync the section from the URL
   useEffect(() => {
-    const onPop = () => setPage(location.pathname.replace(/^\/|\/$/g, '') || 'home');
+    const onPop = () => {
+      const rel = location.pathname.replace(BASE_PATH, '').replace(/^\/|\/$/g, '');
+      setPage(rel || 'home');
+    };
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, []);
@@ -533,7 +538,7 @@ export default function Portfolio({ initialPage = 'home' }: { initialPage?: stri
         <div className="navbar scroll" style={{ flex: 'none', display: 'flex', alignItems: 'center', gap: 4, padding: '8px 12px', borderBottom: `1px solid ${bd}`, background: 'var(--bg,#0e100e)', overflowX: 'auto' }}>
           {NAV.map((n) => {
             const active = n.key === page;
-            const href = n.key === 'home' ? '/' : '/' + n.key;
+            const href = n.key === 'home' ? BASE_PATH : BASE_PATH + '/' + n.key;
             return (
               <a key={n.key} href={href} onClick={(e) => { e.preventDefault(); go(n.key); }} aria-current={active ? 'page' : undefined} className="navlink" style={{ cursor: 'pointer', textDecoration: 'none', fontSize: 11.5, padding: '5px 10px', borderRadius: 6, whiteSpace: 'nowrap', flex: 'none', background: active ? 'var(--sel,#1c2a1c)' : 'transparent', color: active ? green : dim2, border: `1px solid ${active ? 'var(--chipbd,#2a352a)' : 'transparent'}` }}>{n.label}</a>
             );
