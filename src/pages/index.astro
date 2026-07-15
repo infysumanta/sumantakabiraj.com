@@ -1,7 +1,35 @@
 ---
-import Base from '../layouts/Base.astro';
-import Portfolio from '../components/Portfolio';
+import BaseNew from '../layouts/BaseNew.astro';
+import Hero from '../components/new/Hero.astro';
+import About from '../components/new/About.astro';
+import Stack from '../components/new/Stack.astro';
+import BlogPreview from '../components/new/BlogPreview.astro';
+import ProjectsPreview from '../components/new/ProjectsPreview.astro';
+import ExperienceRow from '../components/new/ExperienceRow.astro';
+import Contact from '../components/new/Contact.astro';
+import { EXPERIENCE, EDUCATION } from '../data/profile';
 ---
-<Base title="Sumanta Kabiraj — Full-Stack Developer">
-  <Portfolio client:load />
-</Base>
+<BaseNew title="Sumanta Kabiraj — Full-Stack Developer">
+  <Hero />
+  <About />
+  <Stack />
+  <BlogPreview />
+  <ProjectsPreview />
+  <section style="max-width:680px;margin:0 auto;padding:0 28px 56px">
+    <h2 style="margin:0 0 4px;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)">Experience</h2>
+    {EXPERIENCE.map((e) => <ExperienceRow co={e.co} role={e.role} when={e.when} note={e.note} />)}
+    <a href="/experience" class="io" style="display:inline-block;margin-top:14px;font-size:14px;font-weight:600;color:var(--fg2)">Full history &rarr;</a>
+
+    <h2 style="margin:40px 0 4px;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)">Education</h2>
+    {EDUCATION.map((e) => (
+      <div style="padding:18px 0;border-top:1px solid var(--bd)">
+        <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="font-size:16px;font-weight:600;color:var(--fg2)">{e.school}</div>
+          <div style="font-size:13px;color:var(--dim)">{e.when}</div>
+        </div>
+        <div style="font-size:14px;color:var(--fg2);margin-top:4px">{e.deg}</div>
+      </div>
+    ))}
+  </section>
+  <Contact />
+</BaseNew>

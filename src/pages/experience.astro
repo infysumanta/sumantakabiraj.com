@@ -1,0 +1,24 @@
+---
+import BaseNew from '../layouts/BaseNew.astro';
+import ExperienceRow from '../components/new/ExperienceRow.astro';
+import { EXPERIENCE, EDUCATION } from '../data/profile';
+---
+<BaseNew title="Experience — Sumanta Kabiraj">
+  <div style="max-width:680px;margin:0 auto;padding:56px 28px 64px">
+    <a href="/" class="back" style="font-size:14px;color:var(--dim)">&larr; Home</a>
+    <h1 style="margin:20px 0 8px;font-size:34px;font-weight:800;letter-spacing:-.02em;color:var(--fg)">Experience</h1>
+    <p style="margin:0 0 24px;font-size:15.5px;color:var(--fg2)">Where I've worked and what I've built.</p>
+    {EXPERIENCE.map((e) => <ExperienceRow co={e.co} role={e.role} when={e.when} note={e.note} />)}
+
+    <h2 style="margin:56px 0 4px;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)">Education</h2>
+    {EDUCATION.map((e) => (
+      <div style="padding:18px 0;border-top:1px solid var(--bd)">
+        <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="font-size:16px;font-weight:600;color:var(--fg2)">{e.school}</div>
+          <div style="font-size:13px;color:var(--dim)">{e.when}</div>
+        </div>
+        <div style="font-size:14px;color:var(--fg2);margin-top:4px">{e.deg}</div>
+      </div>
+    ))}
+  </div>
+</BaseNew>
