@@ -16,6 +16,7 @@ const words = post.body?.trim().split(/\s+/).length ?? 0;
 const readMins = Math.max(1, Math.round(words / 200));
 ---
 <BaseNew title={`${post.data.title} — Sumanta Kabiraj`}>
+  <div id="scroll-progress" style="position:fixed;top:0;left:0;height:3px;width:0%;background:var(--fg);z-index:50;transition:width .1s linear"></div>
   <article class="art" style="max-width:850px;margin:0 auto;padding:56px 28px 72px">
     <a href="/blog" class="back" style="font-size:14px;color:var(--dim)">&larr; Blog</a>
     <div style="font-size:13px;color:var(--dim);margin:24px 0 10px">
@@ -35,4 +36,16 @@ const readMins = Math.max(1, Math.round(words / 200));
       <a href="/blog" class="back" style="font-size:14px;color:var(--dim)">&larr; All posts</a>
     </div>
   </article>
+  <script is:inline>
+    (function () {
+      var bar = document.getElementById('scroll-progress');
+      function update() {
+        var h = document.documentElement;
+        var max = h.scrollHeight - h.clientHeight;
+        bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+      }
+      document.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+  </script>
 </BaseNew>
