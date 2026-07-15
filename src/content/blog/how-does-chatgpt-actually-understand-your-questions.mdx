@@ -1,0 +1,86 @@
+---
+title: How Does ChatGPT Actually Understand Your Questions?
+publishedAt: 2026-07-01
+summary: You type a question and get an answer that makes sense a few seconds later. It isn't magic — it's tokens, transformers, and attention. Here's what's really going on under the hood.
+---
+
+You type a question, hit enter, and a few seconds later you get an answer that actually makes sense. It feels a little like magic. It isn't — it's math, a lot of it, running very fast. Here's what's really going on under the hood.
+
+## 1. What Is an LLM, Anyway?
+
+LLM stands for **Large Language Model**. Strip away the buzzwords and it's a program trained on enormous amounts of text — books, articles, code, conversations — to learn the patterns of how language works. Not facts memorized like a database, but *patterns*: which words tend to follow which, how ideas connect, how a question relates to an answer.
+
+LLMs exist to solve a stubbornly hard problem: getting a computer to work with human language, which is messy, ambiguous, and full of context. "Can you get that thing from the store?" makes perfect sense to a person and means almost nothing to a traditional program.
+
+You've probably already met a few LLMs by name: GPT-4/GPT-5 (OpenAI), Claude (Anthropic), Gemini (Google), Llama (Meta). And you're using them more than you might realize — in chatbots, in your email's "smart reply" suggestions, in search engines that now summarize instead of just linking, in coding assistants, in customer support widgets.
+
+## 2. What Actually Happens When You Send a Message
+
+The journey from "you typing" to "ChatGPT replying" has three simple stages:
+
+1. **You type a prompt.** Could be a question, an instruction, a half-formed thought — doesn't matter.
+2. **The message gets processed.** The model breaks your text down, feeds it through its network, and works out what's likely to come next, word by word (more precisely, piece by piece — more on that below).
+3. **A response gets generated.** Not copy-pasted, not looked up — *built*, one piece at a time, based on probabilities the model learned during training.
+
+That last point matters: ChatGPT isn't Googling your question and pasting the top result. It's generating a fresh sequence of text based on patterns, which is why it can write a poem about your cat's opinion on Mondays — that sentence never existed anywhere on the internet before you asked for it.
+
+![](/blog/chatgpt-understand-questions/pipeline.png)
+
+## 3. Why Computers Don't "Understand" Language the Way We Do
+
+Here's the inconvenient truth: computers don't understand words. At all. They understand numbers — specifically, arrays of numbers being multiplied and added together very quickly.
+
+So before a model can do anything with "What's the capital of France?", that sentence has to become numbers. Every letter, every word, every model on Earth — text always gets converted into numeric form first. The unit that conversion happens in is called a **token**.
+
+## 4. Tokenization: Chopping Language Into Bite-Sized Pieces
+
+**Tokenization** is the process of breaking text into smaller chunks — tokens — that the model can turn into numbers and actually process.
+
+Why not just use whole words? Two reasons: there are too many possible words (including typos, made-up words, and words in every language), and some words are really made of meaningful smaller parts. So models split text into a mix of whole words, word-fragments, and even single characters, depending on what's efficient.
+
+A rough example — the sentence:
+
+> "Tokenization is tricky!"
+
+might get split into something like:
+
+```
+["Token", "ization", " is", " tricky", "!"]
+```
+
+Five tokens, four words. That's a normal ratio — as a rule of thumb, 100 tokens is roughly 75 words in English. Every one of those tokens gets mapped to a number, and *that* number is what the model actually operates on.
+
+![](/blog/chatgpt-understand-questions/tokenization.png)
+
+This is also why LLMs have a **context window** — a maximum number of tokens they can "see" at once, like a limited-size whiteboard. Old messages fall off the edge once you fill it up.
+
+![](/blog/chatgpt-understand-questions/context-window.png)
+
+## 5. Transformers: The Architecture That Changed Everything
+
+Tokens alone don't get you understanding — you need something to actually process the relationships between them. That something, for basically every serious LLM today, is called a **Transformer**.
+
+Introduced in a 2017 paper with the almost cocky title "Attention Is All You Need," the Transformer solved a problem older models struggled with: figuring out which words in a sentence *matter to each other*, even when they're far apart.
+
+Take: "The trophy didn't fit in the suitcase because **it** was too big." Is "it" the trophy or the suitcase? A human resolves this instantly using context. Transformers do it using a mechanism called **self-attention** — for every word, the model calculates how much "attention" to pay to every other word in the sentence when figuring out its meaning. Do this across many layers, at massive scale, and you get a system that can track meaning across entire paragraphs, not just neighboring words.
+
+That's the "T" in GPT — **Generative Pre-trained Transformer**. It's why this architecture took over: it's parallelizable (fast to train on modern hardware), scales well with more data, and is genuinely good at capturing long-range context — the exact thing older approaches were bad at.
+
+## Putting It All Together
+
+The full pipeline, start to finish:
+
+![](/blog/chatgpt-understand-questions/full-pipeline.png)
+
+One more knob worth knowing about: **temperature**. It controls how "safe" vs. "creative" the model's word choices are.
+
+- **Low temperature** → the model almost always picks the most probable next word. Output is focused, consistent, a bit predictable. Good for factual answers, code, summaries.
+- **High temperature** → the model is more willing to pick less-likely words. Output is more varied, surprising, and creative — but also more prone to going off the rails. Good for brainstorming, poetry, casual chat.
+
+![](/blog/chatgpt-understand-questions/temperature.png)
+
+## So, Is It "Understanding"?
+
+Not in the human sense — there's no consciousness, no beliefs, no lived experience behind the response. But functionally, by learning statistical patterns over trillions of tokens and using attention to track context, the model produces responses that *behave* like understanding: relevant, coherent, and tailored to what you actually asked.
+
+It's not magic. It's tokens, numbers, and attention — just at a scale big enough to feel like magic.
