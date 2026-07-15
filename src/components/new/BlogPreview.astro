@@ -7,7 +7,7 @@ const posts = (await getCollection('blog')).sort(
 const latest = posts[0];
 ---
 {latest && (
-  <section style="max-width:680px;margin:0 auto;padding:0 28px 56px">
+  <section style="max-width:780px;margin:0 auto;padding:0 28px 56px">
     <h2 style="margin:0 0 16px;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)">Blog</h2>
     <a href={`/blog/${latest.id}`} class="pcard" style="display:block;padding:20px;border:1px solid var(--bd);border-radius:14px;background:var(--card)">
       <div style="font-size:13px;color:var(--dim);margin-bottom:6px">
