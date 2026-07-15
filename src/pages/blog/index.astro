@@ -1,24 +1,26 @@
 ---
 import { getCollection } from 'astro:content';
-import Base from '../../layouts/Base.astro';
+import BaseNew from '../../layouts/BaseNew.astro';
 
 const posts = (await getCollection('blog')).sort(
   (a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()
 );
 ---
-<Base title="Blog — Sumanta Kabiraj">
-  <div data-theme="dark" style={{ minHeight: '100vh', background: 'var(--desk,#080a08)', color: 'var(--fg,#d6ddd4)', padding: '48px 24px' }}>
-    <div style="max-width:720px;margin:0 auto">
-      <h1 style="font-size:28px;color:var(--fg2,#e8efe6)">$ ls -la blog/</h1>
-      <div style="margin-top:24px;display:flex;flex-direction:column;gap:20px">
-        {posts.map((post) => (
-          <a href={`/blog/${post.id}`} style="text-decoration:none;color:inherit;border-top:1px solid var(--bd,#232823);padding-top:16px">
-            <div style="font-size:18px;font-weight:700;color:var(--fg2,#e8efe6)">{post.data.title}</div>
-            <div style="font-size:12px;color:var(--blue,#7dd3fc);margin-top:4px">{post.data.publishedAt.toDateString()}</div>
-            <div style="font-size:13px;color:var(--dim2,#9aa397);margin-top:6px">{post.data.summary}</div>
-          </a>
-        ))}
-      </div>
+<BaseNew title="Blog — Sumanta Kabiraj">
+  <div style="max-width:680px;margin:0 auto;padding:56px 28px 64px">
+    <a href="/" class="back" style="font-size:14px;color:var(--dim)">&larr; Home</a>
+    <h1 style="margin:20px 0 8px;font-size:34px;font-weight:800;letter-spacing:-.02em;color:var(--fg)">Blog</h1>
+    <p style="margin:0 0 36px;font-size:15.5px;color:var(--fg2)">Notes on building AI systems, healthcare software and everything in between.</p>
+    <div>
+      {posts.map((post) => (
+        <a href={`/blog/${post.id}`} class="post" style="display:block;padding:22px 0;border-top:1px solid var(--bd)">
+          <div style="font-size:13px;color:var(--dim);margin-bottom:6px">
+            {post.data.publishedAt.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+          </div>
+          <div class="ptitle" style="font-size:18px;font-weight:600;color:var(--fg)">{post.data.title}</div>
+          <p style="margin:8px 0 0;font-size:14.5px;color:var(--fg2);line-height:1.6">{post.data.summary}</p>
+        </a>
+      ))}
     </div>
   </div>
-</Base>
+</BaseNew>
