@@ -13,13 +13,17 @@ const { title } = Astro.props;
   <ClientRouter />
   <script is:inline>
     (function () {
-      try {
-        var saved = localStorage.getItem('sk-theme');
-        var theme = saved === 'light' || saved === 'dark'
-          ? saved
-          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-        document.documentElement.dataset.theme = theme;
-      } catch (e) { document.documentElement.dataset.theme = 'dark'; }
+      function applyTheme() {
+        try {
+          var saved = localStorage.getItem('sk-theme');
+          var theme = saved === 'light' || saved === 'dark'
+            ? saved
+            : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+          document.documentElement.dataset.theme = theme;
+        } catch (e) { document.documentElement.dataset.theme = 'dark'; }
+      }
+      applyTheme();
+      document.addEventListener('astro:after-swap', applyTheme);
     })();
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -34,7 +38,7 @@ const { title } = Astro.props;
     body{font-family:'Onest',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
     html[data-theme="dark"]{--bg:#0a0a0a;--fg:#f5f5f4;--fg2:#a8a8a5;--dim:#6b6b68;--card:#141413;--cardh:#1b1b19;--bd:#242422;--chip:#1c1c1a;--chipbd:#2a2a27;--chipfg:#cfcfca;--code:#141413;--codebd:#242422;--codefg:#cfcfca}
     html[data-theme="light"]{--bg:#faf9f7;--fg:#1a1a17;--fg2:#565650;--dim:#8f8f88;--card:#f2f1ec;--cardh:#eceae3;--bd:#e2e0d8;--chip:#eeece5;--chipbd:#ddd9cf;--chipfg:#43433d;--code:#f2f1ec;--codebd:#ddd9cf;--codefg:#43433d}
-    html,body{background:var(--bg)}
+    html,body{background:var(--bg);color:var(--fg)}
     a{color:inherit;text-decoration:none}
     @keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
     .io{transition:color .18s,transform .18s}.io:hover{color:var(--fg);transform:translateY(-2px)}
@@ -55,11 +59,20 @@ const { title } = Astro.props;
 
     .art p{margin:0 0 20px;font-size:17px;line-height:1.75;color:var(--fg2)}
     .art h2{margin:44px 0 16px;font-size:24px;font-weight:700;letter-spacing:-.01em;color:var(--fg)}
+    .art h3{margin:32px 0 14px;font-size:19px;font-weight:700;letter-spacing:-.01em;color:var(--fg)}
     .art ul{margin:0 0 20px;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:11px}
+    .art ol{margin:0 0 20px;padding-left:22px;display:flex;flex-direction:column;gap:11px;color:var(--fg2)}
+    .art ol li{font-size:17px;line-height:1.6;color:var(--fg2);padding-left:6px}
     .art li{position:relative;padding-left:22px;font-size:17px;line-height:1.6;color:var(--fg2)}
     .art li:before{content:"\2014";position:absolute;left:0;color:var(--dim)}
     .art strong{color:var(--fg);font-weight:600}
+    .art em{color:var(--fg2)}
+    .art blockquote{margin:0 0 20px;padding:4px 0 4px 18px;border-left:2px solid var(--bd);color:var(--fg2);font-style:italic}
+    .art blockquote p{margin:0}
+    .art code{background:var(--chip);border:1px solid var(--chipbd);border-radius:4px;padding:2px 6px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:14px;color:var(--chipfg)}
     .art pre{margin:0 0 20px;background:var(--code);border:1px solid var(--codebd);border-radius:12px;padding:18px 20px;overflow-x:auto;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:14px;line-height:1.6;color:var(--codefg)}
+    .art pre code{background:none;border:none;padding:0}
+    .art img{max-width:100%;height:auto;border-radius:12px;margin:0 0 20px;border:1px solid var(--bd)}
   </style>
   <script is:inline>
     (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","xj3epfqxbh");
