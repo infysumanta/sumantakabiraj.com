@@ -1,0 +1,11 @@
+---
+import { SKILLS } from '../../data/profile';
+---
+<section style="max-width:680px;margin:0 auto;padding:0 28px 56px">
+  <h2 style="margin:0 0 16px;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)">Stack</h2>
+  <div style="display:flex;flex-wrap:wrap;gap:9px">
+    {SKILLS.map((s) => (
+      <span class="chip" style="font-size:13px;padding:7px 13px;border-radius:20px;background:var(--chip);border:1px solid var(--chipbd);color:var(--chipfg)">{s}</span>
+    ))}
+  </div>
+</section>

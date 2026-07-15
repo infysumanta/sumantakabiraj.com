@@ -1,0 +1,17 @@
+---
+interface Props {
+  co: string;
+  role: string;
+  when: string;
+  note: string;
+}
+const { co, role, when, note } = Astro.props;
+---
+<div class="exp" style="padding:18px 0;border-top:1px solid var(--bd)">
+  <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div class="expco" style="font-size:16px;font-weight:600;color:var(--fg2)">{co}</div>
+    <div style="font-size:13px;color:var(--dim)">{when}</div>
+  </div>
+  <div style="font-size:14px;color:var(--fg2);margin-top:4px">{role}</div>
+  <p style="margin:8px 0 0;font-size:14px;line-height:1.6;color:var(--dim)">{note}</p>
+</div>

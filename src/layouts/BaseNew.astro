@@ -1,0 +1,77 @@
+---
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <script is:inline>
+    (function () {
+      try {
+        var saved = localStorage.getItem('sk-theme');
+        var theme = saved === 'light' || saved === 'dark'
+          ? saved
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.dataset.theme = theme;
+      } catch (e) { document.documentElement.dataset.theme = 'dark'; }
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/jpeg" href="/me.jpeg" />
+  <title>{title}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style is:global>
+    *{box-sizing:border-box}
+    html,body{margin:0}
+    body{font-family:'Onest',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+    html[data-theme="dark"]{--bg:#0a0a0a;--fg:#f5f5f4;--fg2:#a8a8a5;--dim:#6b6b68;--card:#141413;--cardh:#1b1b19;--bd:#242422;--chip:#1c1c1a;--chipbd:#2a2a27;--chipfg:#cfcfca;--code:#141413;--codebd:#242422;--codefg:#cfcfca}
+    html[data-theme="light"]{--bg:#faf9f7;--fg:#1a1a17;--fg2:#565650;--dim:#8f8f88;--card:#f2f1ec;--cardh:#eceae3;--bd:#e2e0d8;--chip:#eeece5;--chipbd:#ddd9cf;--chipfg:#43433d;--code:#f2f1ec;--codebd:#ddd9cf;--codefg:#43433d}
+    html,body{background:var(--bg)}
+    a{color:inherit;text-decoration:none}
+    @keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+    .io{transition:color .18s,transform .18s}.io:hover{color:var(--fg);transform:translateY(-2px)}
+    .chip{transition:border-color .18s,color .18s}.chip:hover{border-color:var(--dim);color:var(--fg)}
+    .pcard{transition:border-color .2s,background .2s}.pcard:hover{border-color:var(--dim);background:var(--cardh)}
+    .cta{transition:border-color .2s,background .2s}.cta:hover{border-color:var(--dim);background:var(--cardh)}
+    .tt{transition:color .18s}.tt:hover{color:var(--fg)}
+    .back{transition:color .18s}.back:hover{color:var(--fg)}
+    .exp{transition:color .18s}.exp:hover .expco{color:var(--fg)}
+    .post{transition:color .18s}.post:hover .ptitle{color:var(--fg)}
+
+    details.pcard summary{list-style:none;cursor:pointer}
+    details.pcard summary::-webkit-details-marker{display:none}
+    details.pcard summary::marker{content:''}
+    details.pcard .chev{display:inline-block;transition:transform .18s;color:var(--dim)}
+    details[open].pcard .chev{transform:rotate(90deg)}
+    details.pcard .pbody{animation:fadein .22s ease}
+
+    .art p{margin:0 0 20px;font-size:17px;line-height:1.75;color:var(--fg2)}
+    .art h2{margin:44px 0 16px;font-size:24px;font-weight:700;letter-spacing:-.01em;color:var(--fg)}
+    .art ul{margin:0 0 20px;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:11px}
+    .art li{position:relative;padding-left:22px;font-size:17px;line-height:1.6;color:var(--fg2)}
+    .art li:before{content:"\2014";position:absolute;left:0;color:var(--dim)}
+    .art strong{color:var(--fg);font-weight:600}
+    .art pre{margin:0 0 20px;background:var(--code);border:1px solid var(--codebd);border-radius:12px;padding:18px 20px;overflow-x:auto;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:14px;line-height:1.6;color:var(--codefg)}
+  </style>
+  <script is:inline>
+    (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","xj3epfqxbh");
+  </script>
+</head>
+<body>
+  <slot />
+  <script is:inline>
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-theme-toggle]');
+      if (!t) return;
+      var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      try { localStorage.setItem('sk-theme', next); } catch (err) {}
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+---
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()
+);
+const latest = posts[0];
+---
+{latest && (
+  <section style="max-width:680px;margin:0 auto;padding:0 28px 56px">
+    <h2 style="margin:0 0 16px;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)">Blog</h2>
+    <a href={`/blog/${latest.id}`} class="pcard" style="display:block;padding:20px;border:1px solid var(--bd);border-radius:14px;background:var(--card)">
+      <div style="font-size:13px;color:var(--dim);margin-bottom:6px">
+        {latest.data.publishedAt.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+      </div>
+      <div style="font-size:17px;font-weight:600;color:var(--fg);margin-bottom:6px">{latest.data.title}</div>
+      <p style="margin:0;font-size:14.5px;color:var(--fg2);line-height:1.6">{latest.data.summary}</p>
+    </a>
+    <a href="/blog" class="io" style="display:inline-block;margin-top:14px;font-size:14px;font-weight:600;color:var(--fg2)">All posts &rarr;</a>
+  </section>
+)}
