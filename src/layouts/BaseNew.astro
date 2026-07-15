@@ -70,7 +70,8 @@ const { title } = Astro.props;
     .art blockquote{margin:0 0 20px;padding:4px 0 4px 18px;border-left:2px solid var(--bd);color:var(--fg2);font-style:italic}
     .art blockquote p{margin:0}
     .art code{background:var(--chip);border:1px solid var(--chipbd);border-radius:4px;padding:2px 6px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:14px;color:var(--chipfg)}
-    .art pre{margin:0 0 20px;background:var(--code);border:1px solid var(--codebd);border-radius:12px;padding:18px 20px;overflow-x:auto;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:14px;line-height:1.6;color:var(--codefg)}
+    .art pre{margin:0 0 20px;background:var(--code)!important;border:1px solid var(--codebd);border-radius:12px;padding:18px 20px;overflow-x:auto;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:14px;line-height:1.6;color:var(--codefg)!important}
+    .art pre span{color:var(--codefg)!important;background:none!important}
     .art pre code{background:none;border:none;padding:0}
     .art img{max-width:100%;height:auto;border-radius:12px;margin:0 0 20px;border:1px solid var(--bd)}
   </style>
