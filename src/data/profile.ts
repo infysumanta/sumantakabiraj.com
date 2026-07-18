@@ -132,9 +132,9 @@ export const EDUCATION = [
 ];
 
 export const SOCIALS = {
-  github: 'https://github.com/infysumanta',
+  github: 'https://github.com/sumantadotai',
   linkedin: 'https://www.linkedin.com/in/sumanta-kabiraj/',
-  twitter: 'https://x.com/infysumanta',
+  twitter: 'https://x.com/sumantadotai',
   instagram: 'https://instagram.com/infysumanta',
   email: 'mailto:me@sumantakabiraj.com',
   cal: 'https://cal.com/sumanta-kabiraj/connect-with-me',
