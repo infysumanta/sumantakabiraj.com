@@ -1,0 +1,409 @@
+---
+title: "How I Run Multiple Claude Code Accounts on One Mac at the Same Time — No Logout Required"
+publishedAt: 2026-07-25
+summary: Logging out and back in every time you switch Claude Code accounts is miserable. One environment variable and a few symlinks fix it. Here's the setup, and a walk through ccslot — the npm package that does it safely on any shell and any OS.
+---
+
+I have more than one Claude account. Most people who use Claude Code seriously end up in the same place eventually — one account for one context, another for another, maybe a third that someone else pays for. That's not the interesting part. The interesting part is that Claude Code, out of the box, really wants you to have exactly one.
+
+Log out, log in, wait for the browser, approve, come back. Do that four times a day and you start looking for a better way.
+
+This is the better way. It's a package called [**ccslot**](https://www.npmjs.com/package/ccslot), it has zero runtime dependencies, and the whole thing is small enough that I can walk you through how it works — which I'm going to do, because you should not point a tool at your `~/.claude` without knowing what it does in there.
+
+```bash
+npx ccslot add work
+```
+
+## The Actual Problem
+
+Claude Code keeps everything it knows about you in `~/.claude`. Not just your login — your project history, your custom skills, your settings, your saved plans, your MCP server config. All of it, one folder.
+
+That's a fine design decision until you have two accounts. Then the folder becomes a single seat that two people are trying to sit in. `/login` doesn't append a second account, it replaces the first one. So switching means:
+
+1. `/logout`
+2. `/login`
+3. Browser opens, pick the other account, approve
+4. Back to the terminal
+5. Realize the session you were mid-way through is gone
+
+And then twenty minutes later you do it again in the other direction.
+
+There's a second, subtler cost. Because the login lives in the same folder as everything else, you can't have two Claude Code sessions running side by side as different accounts. One terminal, one identity, one at a time. If you've ever wanted to leave a long refactor running under one account while you poke at something small under another, that's just not available to you.
+
+## The One Thing That Makes This Possible
+
+Claude Code reads an environment variable called `CLAUDE_CONFIG_DIR`. If it's set, that path is used instead of `~/.claude`. That's the whole hook. Everything below is built on it.
+
+```bash
+CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude
+```
+
+Run that and Claude Code starts up as if it's never met you. Fresh folder, no login, no history. Sign in with your other account and now you have two completely separate installs on one machine, neither of which knows the other exists.
+
+You could stop right here. A lot of people do, and it half-works.
+
+## Why Stopping There Is Annoying
+
+A totally separate config folder means a totally separate *everything*. Which sounds clean, and is actually a pain:
+
+- **Your skills don't come with you.** Anything you've written in `~/.claude/skills` only exists in the account you wrote it in.
+- **Your settings don't come with you.** Permissions, hooks, model preference, status line — all of it has to be redone. And re-done again every time you change your mind.
+- **Your project history doesn't come with you.** This is the one that actually hurts. `/resume` in the second account shows you nothing, because from its point of view you've never worked on this repo. The conversation where you figured out why that build was failing? Different folder. Gone.
+- **Your saved plans don't come with you.**
+
+So you get isolation you didn't ask for. The only thing you *wanted* isolated was the login.
+
+## The Idea: Separate the Auth, Share the Rest
+
+`CLAUDE_CONFIG_DIR` points at a *directory*, and a directory can contain symlinks. Claude Code doesn't care whether `skills` is a real folder or a pointer to one somewhere else — it just opens the path.
+
+So the shape of the fix is: a new config dir per account, with the parts you want shared symlinked back to the original. Auth stays real and separate; everything else is a pointer to one shared copy.
+
+| Shared | Why |
+|---|---|
+| `projects` | `/resume` works across accounts. Start something in one, pick it up in the other. |
+| `skills` | Write a skill once, every account has it. |
+| `plans` | Plans made in one account are readable from another. |
+| `settings.json` | One place to change permissions, hooks, and preferences. |
+
+That's four `ln -s` calls, which is exactly what I did by hand for months. It works right up until you hand it to someone else — then it turns out they use fish, or Windows, or they typo a path and half-link a directory, or they cheerfully add their credentials file to the shared list and give two accounts one login.
+
+Those are the problems `ccslot` exists to not have.
+
+## Getting Started
+
+```bash
+npx ccslot add work        # try it without installing anything
+npm i -g ccslot            # or keep it around
+```
+
+![](/blog/multiple-claude-accounts/01-add.svg)
+
+One command: the config dir exists, the four shared paths are linked, and a `ccwork` alias is in the right rc file for your shell. First launch opens a browser once, you sign in with the other account, and that's the last time you do that.
+
+`ccslot view` shows you exactly what happened, which is the command I use most:
+
+![](/blog/multiple-claude-accounts/02-view.svg)
+
+**shared** is what points back at `~/.claude`. **own** is what belongs to this account alone — its sessions, its history, its `.claude.json`. Nothing is hidden; if a link is broken, `view` says `BROKEN` next to it.
+
+And the full surface:
+
+| Command | What it does |
+|---|---|
+| `ccslot add <name>` | Create the slot, link the shared paths, write the shell alias |
+| `ccslot list` | Every slot, with the active one marked |
+| `ccslot view <name>` | What's shared vs. what's this slot's own |
+| `ccslot delete <name>` | Remove the slot and its alias — shared data untouched |
+| `ccslot <name> [args…]` | Launch Claude Code as that account |
+| `ccslot run <name> [args…]` | Same, explicit — for when a slot name collides with a command |
+| `ccslot use <name>` | Point the *current shell* at a slot instead of launching |
+| `ccslot install` | Check whether Claude Code is actually on this machine |
+
+Flags worth knowing, on `add` and `delete`:
+
+```
+--share a,b,c   override what gets shared (default: projects,skills,plans,settings.json)
+--prefix p      alias prefix (default cc, so "work" -> ccwork)
+--rc <file>     which rc file to write the alias into
+--no-alias      don't touch any rc file
+--shell <name>  zsh | bash | fish | powershell | cmd
+-y, --yes       delete without confirming
+```
+
+And an optional `~/.ccslotrc.json` if you want different defaults permanently:
+
+```json
+{ "share": ["projects", "skills", "plans", "settings.json"], "aliasPrefix": "cc" }
+```
+
+## How It Actually Works
+
+This is the part I'd want to read before running someone's package against my config folder. Every snippet below is the real source, [on GitHub](https://github.com/sumantadotai/ccslot).
+
+### Slot layout
+
+There's no database, no state file, no registry. A slot *is* a directory named `~/.claude-<name>`:
+
+```ts
+export function paths(home: string = os.homedir()): Paths {
+  return {
+    home,
+    base: path.join(home, '.claude'),
+    config: path.join(home, '.ccslotrc.json'),
+    slotDir: (name: string) => path.join(home, `.claude-${name}`),
+  }
+}
+```
+
+That naming convention is the entire lookup mechanism. `ccslot list` is a `readdir` of your home directory filtered on the `.claude-` prefix. Which means nothing to corrupt, nothing to get out of sync, and if you delete the package tomorrow every slot still works — the alias and the env var don't need `ccslot` to exist.
+
+### Linking, on three operating systems
+
+The naive version is one `fs.symlinkSync` call. That's correct on macOS and Linux and fails on Windows, where creating a symlink needs a privilege most users don't have:
+
+```ts
+export function linkShared(target: string, linkPath: string): LinkKind {
+  const isDir = fs.statSync(target).isDirectory()
+  try {
+    fs.symlinkSync(target, linkPath, isDir ? 'dir' : 'file')
+    return 'symlink'
+  } catch (e) {
+    const code = (e as NodeJS.ErrnoException).code
+    if (!IS_WINDOWS || (code !== 'EPERM' && code !== 'EACCES')) throw e
+    if (isDir) {
+      fs.symlinkSync(target, linkPath, 'junction')
+      return 'junction'
+    }
+    fs.linkSync(target, linkPath)
+    return 'hardlink'
+  }
+}
+```
+
+Try the symlink; if Windows refuses it, fall back to a **junction** for directories (no privilege required) and a **hard link** for files. All three give the same thing that matters here — one copy of the data, reachable from two paths. The `EPERM`/`EACCES` check is deliberately narrow: a genuine permissions bug on macOS should still throw rather than quietly do something else.
+
+This is also why `view` can distinguish them. A hard link isn't a symlink, so identity is checked by inode instead:
+
+```ts
+export function isHardLinkOf(a: string, b: string): boolean {
+  try {
+    const sa = fs.statSync(a)
+    const sb = fs.statSync(b)
+    return sa.ino !== 0 && sa.ino === sb.ino && sa.dev === sb.dev
+  } catch {
+    return false
+  }
+}
+```
+
+### The list of things it refuses to share
+
+This is the most important twenty lines in the package:
+
+```ts
+export const NEVER_SHARE: ReadonlySet<string> = new Set([
+  '.credentials.json',
+  '.claude.json',
+  'sessions',
+  'history.jsonl',
+  'statsig',
+  'plugins',
+  'todos',
+  'shell-snapshots',
+  'ide',
+])
+```
+
+Two different reasons in one list.
+
+`.credentials.json` is the safety one. On macOS your login lives in the Keychain, but on Linux it's a real file sitting in the config dir — so if you could share it, you'd have two folders pointing at one login and the entire setup would be pointless. The list makes that unmakeable rather than merely discouraged.
+
+The rest are files a *live session writes to*. Two Claude Code processes sharing `sessions/` or `history.jsonl` is a corruption bug waiting for a slow afternoon. `plugins` is in there for a duller reason: plugins carry their own state and update independently, and sharing them caused more confusion than it saved.
+
+Both get enforced in one place, along with a check that you can't escape the config dir with a path:
+
+```ts
+export function assertShare(items: string[]): string[] {
+  for (const item of items) {
+    if (item.includes('/') || item.includes('\\') || item === '.' || item === '..') {
+      throw new UserError(`shared path must be a top-level name inside ~/.claude, got ${item}`)
+    }
+    if (NEVER_SHARE.has(item)) {
+      throw new UserError(`refusing to share ${item} — it is per-account state …`)
+    }
+  }
+  return items
+}
+```
+
+`--share` and `~/.ccslotrc.json` both run through it. There is no way in.
+
+### Knowing your shell
+
+The bash script I started with appended to `~/.zshrc` unconditionally. If you use fish, it wrote an alias into a file your shell never reads, and then said "done!"
+
+```ts
+export function shellRc(home, shell = process.env.SHELL ?? '', platform = process.platform) {
+  switch (detectShell(shell, platform)) {
+    case 'powershell':
+    case 'cmd':
+      return null
+    case 'fish':
+      return path.join(home, '.config', 'fish', 'config.fish')
+    case 'bash':
+      return path.join(home, '.bashrc')
+    default:
+      return path.join(home, '.zshrc')
+  }
+}
+```
+
+`null` on Windows is a decision, not an oversight: there's no dotfile there that can be appended to without guessing, so `add` skips the alias entirely and tells you to use `ccslot <name>`. Guessing wrong means writing into a file you didn't ask it to touch.
+
+Fish also has different alias syntax — no `=` — so the line is built per shell:
+
+```ts
+export function aliasLine(alias: string, name: string, rc: string): string {
+  return rc.endsWith('.fish')
+    ? `alias ${alias} 'CLAUDE_CONFIG_DIR="$HOME/.claude-${name}" claude'`
+    : `alias ${alias}='CLAUDE_CONFIG_DIR="$HOME/.claude-${name}" claude'`
+}
+```
+
+Note `$HOME` rather than an expanded `/Users/you`. The alias survives a machine change, and reads correctly when you're skimming your rc file six months from now.
+
+Appending is idempotent — run `add` twice and you don't get two identical alias lines:
+
+```ts
+if (existing.split('\n').some((l) => l.trim() === line)) return false
+```
+
+### Launching
+
+`ccslot work` doesn't set a global variable. It spawns Claude Code with `CLAUDE_CONFIG_DIR` in *that child process's* environment and nothing else:
+
+```ts
+export function launchSpec(name, args = [], { home, command = 'claude', platform } = {}) {
+  const dir = paths(home).slotDir(name)
+  if (!fs.existsSync(dir)) {
+    throw new UserError(`no such slot: ${name} — create it with \`ccslot add ${name}\``)
+  }
+  const win = platform === 'win32'
+  return {
+    command,
+    args: win ? args.map(quoteForCmd) : args,
+    shell: win,
+    env: { ...process.env, CLAUDE_CONFIG_DIR: dir },
+    dir,
+  }
+}
+```
+
+Two design notes in there worth calling out.
+
+**It returns a spec instead of spawning.** The function that decides *what* to run is separate from the code that runs it, so the interesting logic can be asserted on in tests without ever launching a real Claude Code. The comment in the source says exactly this. It's the difference between a tested CLI and a hoped-for one.
+
+**`shell: true` only on Windows.** Windows ships `claude` as `claude.cmd`, and `CreateProcess` can't execute a `.cmd` directly — it needs a shell. On macOS and Linux, going through a shell would be a needless quoting hazard, so it doesn't.
+
+Arguments after the slot name are passed straight through, untouched, which is why `ccslot work --resume` works without `ccslot` ever needing to know what `--resume` means.
+
+### `use`, and why it needs `eval`
+
+A child process cannot change its parent shell's environment. That's an OS rule, not a limitation anyone can code around — so `ccslot use` prints the line and your shell evaluates it:
+
+```ts
+switch (shell ?? detectShell()) {
+  case 'powershell':
+    return `$env:CLAUDE_CONFIG_DIR = '${dir.replaceAll("'", "''")}'`
+  case 'cmd':
+    return `set CLAUDE_CONFIG_DIR=${dir}`
+  case 'fish':
+    return `set -gx CLAUDE_CONFIG_DIR '${dir.replaceAll("'", `'\\''`)}'`
+  default:
+    return `export CLAUDE_CONFIG_DIR='${dir.replaceAll("'", `'\\''`)}'`
+}
+```
+
+Four shells, four syntaxes, each with its own quote-escaping rule. PowerShell doubles a single quote, POSIX shells need the `'\''` dance.
+
+The nice touch is what happens when you run it bare. If stdout is a TTY, nobody is eval'ing anything, so printing the export line alone would look like it worked and silently do nothing. Instead it explains itself:
+
+```bash
+$ ccslot use work
+# a child process cannot change its parent shell, so this needs eval:
+
+  eval "$(ccslot use work)"
+
+# or just launch directly:
+
+  ccslot work
+```
+
+Piped, it emits the bare line and nothing else.
+
+### Deleting without eating your data
+
+This is the operation I most wanted to stop doing by hand, because doing it by hand means typing `rm -rf` with a `$HOME` in it:
+
+```ts
+if (path.resolve(dir) === path.resolve(base)) {
+  throw new UserError('refusing to delete the base ~/.claude directory')
+}
+if (!fs.existsSync(dir)) throw new UserError(`no such slot: ${name} (${dir} not found)`)
+
+// fs.rm unlinks symlinks and junctions rather than following them, and removing a
+// hard link leaves the other name intact — so shared targets survive on every platform.
+fs.rmSync(dir, { recursive: true, force: true })
+```
+
+The comment is the justification. On every platform and every link type used above, removing the slot dir removes *pointers*, never the shared originals. Plus an explicit refusal to touch base `~/.claude`, and an interactive confirm unless you pass `-y`.
+
+### Finding Claude Code
+
+Small thing, but it's the one that decides whether a first-time user gets a clear message or a stack trace:
+
+```ts
+const pathKey = Object.keys(env).find((k) => k.toUpperCase() === 'PATH') ?? 'PATH'
+const exts = platform === 'win32'
+  ? (env['PATHEXT'] ?? '.COM;.EXE;.BAT;.CMD').split(';').filter(Boolean)
+  : ['']
+```
+
+A PATH walk instead of shelling out to `which`/`where`: no child process, identical behaviour on all three platforms, and it can be tested against a fake `PATH`. Windows spells the variable `Path` and needs `PATHEXT` to know that `claude.cmd` is executable — hence both lines.
+
+If `claude` isn't found, `ccslot` prints install instructions rather than failing at spawn time. The slot itself is still valid, so that's a warning, not an error.
+
+## Using It Day to Day
+
+Three ways to run an account, because habits differ:
+
+```bash
+ccslot work --resume            # direct — no alias, no shell setup
+ccwork --resume                 # the alias ccslot wrote for you
+eval "$(ccslot use work)"       # point this whole shell at the slot
+```
+
+![](/blog/multiple-claude-accounts/04-two-accounts.svg)
+
+Two terminals, two accounts, both live at once. Neither knows about the other's login and neither cares.
+
+`ccslot list` when you've lost track — the `*` marks the slot the current shell is pointed at:
+
+![](/blog/multiple-claude-accounts/03-list.svg)
+
+And the part that still makes me happy, `/resume`:
+
+![](/blog/multiple-claude-accounts/05-shared-history.svg)
+
+That's a conversation started under one account, picked up under a different one, in the same repo. The history lives in the shared `projects` folder, so it doesn't matter which identity wrote it. Hit your limit mid-task? Switch accounts, resume, keep going.
+
+## Where the Auth Actually Lives
+
+Worth seeing, because it's the thing that makes the whole setup safe rather than clever. On macOS, Claude Code doesn't store credentials in the config folder at all — they go in the Keychain, with a separate entry per config directory:
+
+![](/blog/multiple-claude-accounts/06-keychain.svg)
+
+The unlabeled first entry is the default `~/.claude`. Each of the others is a slot, keyed by a hash of its path. The accounts aren't sharing one auth file and politely taking turns — they're in genuinely different drawers. On Linux, where it's a real `.credentials.json` in the config dir, that file is on the never-share list for exactly this reason.
+
+## Things That Will Bite You
+
+**Two accounts, same project, at the same time.** They share `projects/`, so two live sessions in the same repo are two processes writing near the same place. Nothing has corrupted for me, but I don't push it — different accounts get different repos, or I wait. If you want that guaranteed safe: `ccslot add work --share skills,plans,settings.json` and accept losing cross-account `/resume`.
+
+**MCP servers need authorizing per slot.** OAuth-based MCP connections are stored per config dir, same as your login, so a new slot means re-authorizing them. Whether that's a chore or a feature depends on you — I use it deliberately, so each slot talks to Jira and Drive as a different identity while still sharing one project history.
+
+**Backup tools and symlinks.** If you sync `~/.claude` anywhere, check how your tool treats symlinks. Some follow them and back up the same data once per slot. Not dangerous, just wasteful and confusing to debug later.
+
+**The Keychain entry outlives the slot.** `ccslot delete` says so rather than silently leaving it. Keychain Access will remove it if you care.
+
+**Node 22 or newer.** It's in `engines`, so `npx` will tell you — but that's the one thing likely to stop a clean install.
+
+**Use accounts you're actually entitled to.** Your own personal account, an account your employer gave you — fine. This isn't a way to farm accounts to dodge limits, and I'd rather say that plainly than pretend the thought never occurs.
+
+## What This Actually Bought Me
+
+No logout dance. Two sessions running at once when I need them. One set of skills, one settings file, one shared history across all of them. A new account is one command and a browser tab.
+
+The idea underneath is still just one environment variable and a few symlinks — that part I could rebuild from memory in a minute. Everything else in the package is the boring work of not breaking on someone else's shell, someone else's OS, and someone else's worst-case typo. That work isn't clever, but it's the difference between a snippet that works on my machine and something I'm willing to hand you.
+
+Docs are at [ccslot.sumanta.ai](https://ccslot.sumanta.ai), source at [github.com/sumantadotai/ccslot](https://github.com/sumantadotai/ccslot). If it breaks on your setup, [open an issue](https://github.com/sumantadotai/ccslot/issues) — the failure modes worth fixing are the ones I can't reproduce on my own machine.
